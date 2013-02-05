@@ -43,7 +43,7 @@ import java.util.ArrayList;
   public symbol_table s = new symbol_table();
 
   // Return array index of character
-  public int nextSymbol(char c) {
+  public int alphaIndex(char c) {
     int v = c;
     if (v >= 97) {
         return v - 97 + 26;
@@ -52,7 +52,7 @@ import java.util.ArrayList;
   }
 
   public void trie(String str) {
-    int value = nextSymbol(str.charAt(0));
+    int value = alphaIndex(str.charAt(0));
     int ptr = s.control[value];
 
     if (ptr == -1) { // Undefined
@@ -65,49 +65,47 @@ import java.util.ArrayList;
         s.symbol.add('@'); 
     }
     else { // Defined
-        boolean differs = false;
+        
+        int i = 1; // 2nd character, 'i' is the symbol counter
+        boolean exit = false;
 
-        // Point to where it differs
-        int i = 1;
-        while (i < str.length()) {
-            if(s.symbol.size() <= ptr) {
-                break;
-            }
-            else if (s.symbol.get(ptr) == str.charAt(i)) {
-                i++;
+        if(str.length() == 1) {
+            return;
+        }
+
+        while(!exit) {
+            if (s.symbol.get(ptr) == str.charAt(i)) {
+                // if endmarker
+                if(str.length() -1 <= i) {
+                    exit = true;
+                    break; 
+                }
+                i++; 
                 ptr++;
             }
+            else if((s.next.size() > ptr) && (s.next.get(ptr) != -1)) {
+                ptr = s.next.get(ptr);
+            }
             else {
-                System.out.printf("%n%n [%s DIFFERS AT i=%d,ptr=%d]%n%n",str,i,ptr);
-                differs = true;
+
+                while(s.next.size() <= ptr) {
+                    s.next.add(-1);
+                } // grow the (next) array
+
+                // Set next available which will 
+                // always be size() (dynamically allocated)
+                s.next.set(ptr,s.symbol.size()); 
+
+                while(i < str.length()) {
+                    s.symbol.add(str.charAt(i++));
+                }
+                s.symbol.add('@');
+
+                exit = true;
                 break;
             }
         }
 
-        if (differs) {
-            int next;
-
-            if (s.next.size() <= ptr) {
-                next = s.symbol.size();
-            }
-            else if (s.next.get(ptr) == -1) {
-                next = s.symbol.size();
-            }
-            else {
-                next = s.next.get(ptr);
-            }
-
-            while(s.next.size() <= ptr) {
-                s.next.add(-1);
-            }
-
-            s.next.set(ptr,next);
-
-            while (i < str.length()) {
-                s.symbol.add(str.charAt(i++));
-            }
-            s.symbol.add('@');
-        }
 
     }
 
