@@ -1,0 +1,36 @@
+// All conventions test
+/* spanning several lines
+   spanning several lines
+   spanning several lines
+   spanning several lines
+   spanning several lines
+   spanning several lines
+   spanning several lines*/
+   
+ int main() {
+  bool true; 
+  break;
+  class isFun;
+  double orNothing;
+  else extends for if implements int
+  interface newarray println readln
+  return;
+  string johnny = "Johnny!";
+  void while;
+  hello = "salutations";
+  Hello = "a different greeting than hello";
+  inintvoid
+  if(23void
+  100
+  00450
+  0x05F
+  0x05G
+  .12
+  12.2E+2
+  _ISinvalid .12E+2
+  12.e+2
+  12.E+2
+  true
+  false
+  + - * / % < <= > >= == != = ; , . ( ) [ ] { }
+ }

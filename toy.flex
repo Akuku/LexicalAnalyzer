@@ -111,31 +111,88 @@ import java.util.ArrayList;
 
   }
 
-  // public void printTable() {
-  //   String alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-  //   System.out.printf("%10s","");
-  //   int j = 0;
-  //   for (int i = 0; i < s.control.length; ++i) {
-  //       System.out.printf("%c    ",alpha.charAt(i));
-  //       int k = 0;
-  //       if((i+1) % 10 == 0) {
-  //           k = i;
-  //           System.out.printf("%n%10s", "switch");
-  //       }
-  //       for(; j<=k; ++j) {
-  //           System.out.printf("%3d ", s.control[i]);
-  //       }
-  //       if(k > 0) {
-  //           System.out.println("\n");
-  //       }
-  //   }
-  // }
+    public void printControl(int head, int tail) {
+        System.out.printf("%-10s", "switch:");
+        int v = 0;
+        for (; head < tail; ++head) {
+            v = s.control[head];
+            if (v == -1) {
+                System.out.print("$   ");
+            }
+            else {
+                System.out.printf("%-3d ", v);
+            }
+        }
+        System.out.println("\n");
+    }
+
+    public void printSymbol(int head, int tail) {
+        System.out.printf("%-10s", "symbol:");
+        for(int i = head; i < tail; ++i) {
+            System.out.printf("%c   ", s.symbol.get(i));
+        }
+        System.out.println();
+    }
+
+    public void printNext(int head, int tail) {
+        System.out.printf("%-10s", "next:");
+        int v = 0;
+        for (int i = head; i < tail; ++i) {
+            v = s.next.get(i);
+            if (v == -1) {
+                System.out.print("$   ");
+            }
+            else {
+                System.out.printf("%-3d ", v);
+            }
+        }
+        System.out.println("\n");       
+
+    }
+
+    private void equalizeNext() {
+        if (s.symbol.size() > s.next.size()) {
+            while (s.next.size() != s.symbol.size()) {
+                s.next.add(-1);
+            }
+        }
+    }
 
     public void printTable() {
         String alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-        for (int i = 0; i < 52; ++i) {
-            System.out.printf("%c : %d%n", alpha.charAt(i), s.control[i]);
+        System.out.printf("%-10s","");
+        int head = 0;
+        int i = 0;
+        for (; i < 52; ++i) {
+            if ((i+1)%20 == 0) {
+                System.out.println();
+                printControl(head,i);
+                System.out.printf("%-10s","");
+                head = i;
+            }
+            System.out.printf("%c   ", alpha.charAt(i));
         }
+        System.out.println();
+        printControl(head,i);
+
+        equalizeNext();
+
+        i = 0;
+        head  = 0;
+        System.out.printf("%-10s",""); 
+        for (; i < s.symbol.size(); ++i) {
+            if ((i+1)%20 == 0) {
+                System.out.println();
+                printSymbol(head,i);
+                printNext(head,i);
+                System.out.printf("%-10s","");
+                head = i;
+            }
+            System.out.printf("%-3d ", i);
+        }
+        System.out.println();
+        printSymbol(head,i);
+        printNext(head,i);
     }
 
 %}
@@ -209,7 +266,7 @@ while {System.out.printf("%s ",yytext()); return tokens.t_while.ordinal();}
 /*stupid thing has to be declared up here or it will match id */
 true|false {System.out.print("boolconstant "); return tokens.t_boolconstant.ordinal();}
 
-{identifier} {System.out.print("id ");trie(yytext());return tokens.t_id.ordinal();}
+{identifier} {System.out.print("id "); trie(yytext()); return tokens.t_id.ordinal();}
 {whitespace} { }
 {newline} {System.out.print("\n");} /*preserve line breaks*/
 {integer} {System.out.print("intconstant "); return tokens.t_intconstant.ordinal();}
@@ -240,4 +297,4 @@ true|false {System.out.print("boolconstant "); return tokens.t_boolconstant.ordi
 "{" {System.out.print("leftbrace "); return tokens.t_leftbrace.ordinal();}
 "}" {System.out.print("rightbrace "); return tokens.t_rightbrace.ordinal();}
 
-. { /* illegal chars */ }
+. { /* ignore illegal chars */ }

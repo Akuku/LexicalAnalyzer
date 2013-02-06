@@ -5,23 +5,13 @@ public class LexerTest {
     try {
       Lexer lex = new Lexer(new FileReader(z[0]));
       while(lex.yylex() != null) {}
-      System.out.println();
+      System.out.println("\n\n");
+      System.out.println("Trie Table for identifiers:\n");
       lex.printTable();
-      System.out.println();
-
-      for(int i = 0; i < lex.s.symbol.size(); ++i) {
-        System.out.printf("%c ", lex.s.symbol.get(i));
-      }
-
-      System.out.println();
-
-      for(int i = 0; i < lex.s.next.size(); ++i) {
-        System.out.printf("%d ", lex.s.next.get(i));       
-      }
-
+      System.out.println("\n\n");
     }
     catch (Exception e) {
-      e.printStackTrace();
+      System.out.println("Usage: java LexerTest <Input File Name>");
     }
   }
 }
